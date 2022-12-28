@@ -1,12 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import pandas as pd
 
 user_agent = {'User-agent': 'Mozilla/5.0'}
 
 # Parameters for - all_hotels_parse
-num_of_reviews = []
+hotel_names = []
 hotel_url = []
+num_of_reviews = []
 
 # Parameters for - specific_hotel_parse
 # part 1
@@ -116,10 +118,12 @@ def specific_hotel_parse():
         else:
             boolean_cable_satellite_TV.append("0")
         add_to_arr(great_for_walkers_rate,
-                   find_a_number_in_string(soup_obj.find("span", attrs={"class": "iVKnd fSVJN"})))
-        add_to_arr(num_of_restaurants, find_a_number_in_string(soup_obj.find("span", attrs={"class": "iVKnd Bznmz"})))
-        add_to_arr(num_attractions, find_a_number_in_string(soup_obj.find("span", {"class": "iVKnd rYxbA"}).get_text()))
-        print_arrays()
+                   str(find_a_number_in_string(soup_obj.find("span", attrs={"class": "iVKnd fSVJN"}))[0]))
+        add_to_arr(num_of_restaurants,
+                   str(find_a_number_in_string(soup_obj.find("span", attrs={"class": "iVKnd Bznmz"}))[0]))
+        add_to_arr(num_attractions,
+                   str(find_a_number_in_string(soup_obj.find("span", {"class": "iVKnd rYxbA"}).get_text())[0]))
+        # print_arrays()
 
 
 def add_to_arr(arr_name, find_code):
@@ -136,6 +140,9 @@ def all_hotels_parse(soup_obj, tripadvisor_url_short):
         for branch in branches:
             review = branch.find("a", {"class": "review_count"}).get_text()
             num_of_reviews.append(review)
+            hotel_name_1 = branch.find("a", {"target": "_blank"}).get_text()
+            hotel_name_1_after_arrange = str(hotel_name_1).split(".")[-1].strip()
+            hotel_names.append(hotel_name_1_after_arrange)
             hotel_url_1 = tripadvisor_url_short + branch.find("a")["href"]
             hotel_url.append(hotel_url_1)
         branch_page = soup_obj.find("div", {"class": "pageNumbers"})
@@ -148,7 +155,7 @@ def all_hotels_parse(soup_obj, tripadvisor_url_short):
             break
         i += 1
     # print(num_of_reviews)
-    print(hotel_url)
+    # print(hotel_url)
 
 
 def create_soup_obj(url):
@@ -160,3 +167,19 @@ def create_soup_obj(url):
         return soup_obj
     except:
         print("Error : couldn't create soup object!")
+
+
+def create_df():
+    dictionary_for_df = {"Hotel name": hotel_names, "Hotel url": hotel_url, "Number of reviews": num_of_reviews,
+                         "Tripadvisor rating": rating_tripadvisor,
+                         "Rating regarding other hotels in the same city": rating_regarding_other_hotels,
+                         "Location rating": location_rating, "Cleanliness rating": cleanliness_rating,
+                         "Service rating": service_rating, "Value of money": value_of_money,
+                         "Paid private parking nearby": boolean_paid_private_parking_nearby,
+                         "Free high speed wifi": boolean_free_high_speed_wifi, "Fitness_center": boolean_fitness_center,
+                         "Air conditioning": boolean_air_conditioning, "Minibar": boolean_minibar,
+                         "Cable satellite TV": boolean_cable_satellite_TV, "Great for walkers": great_for_walkers_rate,
+                         "Number of restaurants": num_of_restaurants, "Num of attractions": num_attractions}
+    df = pd.DataFrame(dictionary_for_df)
+    print(df)
+    df.to_csv(r'data frame.csv', index=False,header=True)
