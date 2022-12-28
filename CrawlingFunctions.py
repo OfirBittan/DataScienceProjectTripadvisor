@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import pandas as pd
+from colorama import Fore
 
 user_agent = {'User-agent': 'Mozilla/5.0'}
 
@@ -38,44 +39,37 @@ num_attractions = []
 
 
 def print_arrays():
-    print("rating_tripadvisor")
+    print("rating_tripadvisor " + str(len(rating_tripadvisor)))
     print(rating_tripadvisor)
-    print("rating_regarding_other_hotels")
+    print("rating_regarding_other_hotels " + str(len(rating_regarding_other_hotels)))
     print(rating_regarding_other_hotels)
-    print("location_rating")
+    print("location_rating " + str(len(location_rating)))
     print(location_rating)
-    print("cleanliness_rating")
+    print("cleanliness_rating " + str(len(cleanliness_rating)))
     print(cleanliness_rating)
-    print("service_rating")
+    print("service_rating " + str(len(service_rating)))
     print(service_rating)
-    print("value_of_money")
+    print("value_of_money " + str(len(value_of_money)))
     print(value_of_money)
-    print("boolean_paid_private_parking_nearby")
+    print("boolean_paid_private_parking_nearby " + str(len(boolean_paid_private_parking_nearby)))
     print(boolean_paid_private_parking_nearby)
-    print("boolean_free_high_speed_wifi")
-    print(boolean_free_high_speed_wifi)
-    print("boolean_fitness_center")
+    print("boolean_fitness_center " + str(len(boolean_fitness_center)))
     print(boolean_fitness_center)
-    print("boolean_air_conditioning")
+    print("boolean_air_conditioning " + str(len(boolean_air_conditioning)))
     print(boolean_air_conditioning)
-    print("boolean_minibar")
+    print("boolean_minibar " + str(len(boolean_minibar)))
     print(boolean_minibar)
-    print("boolean_cable_satellite_TV")
+    print("boolean_cable_satellite_TV " + str(len(boolean_cable_satellite_TV)))
     print(boolean_cable_satellite_TV)
-    print("great_for_walkers_rate")
+    print("great_for_walkers_rate " + str(len(great_for_walkers_rate)))
     print(great_for_walkers_rate)
-    print("num_of_restaurants")
+    print("num_of_restaurants " + str(len(num_of_restaurants)))
     print(num_of_restaurants)
-    print("num_attractions")
+    print("num_attractions " + str(len(num_attractions)))
     print(num_attractions)
 
 
-def build_df():
-    return None
-
-
 def find_a_number_in_string(s):
-    # In string rating added function that gets floats out of the string
     return re.findall(r"[-+]?\d*\.\d+|\d+", str(s))
 
 
@@ -85,13 +79,20 @@ def specific_hotel_parse():
             soup_obj = create_soup_obj(url)
         except:
             continue
-        add_to_arr(rating_tripadvisor, soup_obj.find("span", {"class": "uwJeR P"}).get_text())
-        add_to_arr(rating_regarding_other_hotels, soup_obj.find("span", {"class": "Ci _R S4 H3 MD"}).get_text())
-        string_rating = find_a_number_in_string(soup_obj.find("div", {"class": "SSDgd"}).get_text())
-        location_rating.append(string_rating[0])
-        cleanliness_rating.append(string_rating[1])
-        service_rating.append(string_rating[2])
-        value_of_money.append(string_rating[3])
+        add_to_arr(rating_tripadvisor, find_a_number_in_string(soup_obj.find("span", {"class": "uwJeR P"})))
+        add_to_arr(rating_regarding_other_hotels,
+                   find_a_number_in_string(soup_obj.find("span", {"class": "Ci _R S4 H3 MD"})))
+        string_rating = find_a_number_in_string(soup_obj.find("div", {"class": "SSDgd"}))
+        if len(string_rating) < 4:
+            location_rating.append("")
+            cleanliness_rating.append("")
+            service_rating.append("")
+            value_of_money.append("")
+        else:
+            location_rating.append(string_rating[0])
+            cleanliness_rating.append(string_rating[1])
+            service_rating.append(string_rating[2])
+            value_of_money.append(string_rating[3])
         string_facilities = str(soup_obj.findAll("div", attrs={"class": "ssr-init-26f"}))
         if "Paid public parking nearby" in string_facilities:
             boolean_paid_private_parking_nearby.append("1")
@@ -118,25 +119,33 @@ def specific_hotel_parse():
         else:
             boolean_cable_satellite_TV.append("0")
         add_to_arr(great_for_walkers_rate,
-                   str(find_a_number_in_string(soup_obj.find("span", attrs={"class": "iVKnd fSVJN"}))[0]))
+                   find_a_number_in_string(soup_obj.find("span", attrs={"class": "iVKnd fSVJN"})))
         add_to_arr(num_of_restaurants,
-                   str(find_a_number_in_string(soup_obj.find("span", attrs={"class": "iVKnd Bznmz"}))[0]))
+                   find_a_number_in_string(soup_obj.find("span", attrs={"class": "iVKnd Bznmz"})))
         add_to_arr(num_attractions,
-                   str(find_a_number_in_string(soup_obj.find("span", {"class": "iVKnd rYxbA"}).get_text())[0]))
-        # print_arrays()
+                   find_a_number_in_string(soup_obj.find("span", {"class": "iVKnd rYxbA"})))
+        print_arrays()
 
 
 def add_to_arr(arr_name, find_code):
-    try:
-        return arr_name.append(find_code)
-    except:
-        return "No Parameter"
+    if find_code is not None:
+        if type(find_code) == list and len(find_code) > 0:
+            arr_name.append(float(find_code[0]))
+        elif type(find_code) == list and len(find_code) == 0:
+            arr_name.append("")
+        else:
+            if type(find_code) == str:
+                arr_name.append(find_code)
+            else:
+                arr_name.append(float(find_code))
+    else:
+        arr_name.append("")
 
 
 def all_hotels_parse(soup_obj, tripadvisor_url_short):
     branches = soup_obj.find_all("div", {"class": "ui_column is-8 main_col allowEllipsis"})
     i = 1
-    while i < 10:
+    while i < 2:
         for branch in branches:
             review = branch.find("a", {"class": "review_count"}).get_text()
             num_of_reviews.append(review)
@@ -145,31 +154,28 @@ def all_hotels_parse(soup_obj, tripadvisor_url_short):
             hotel_names.append(hotel_name_1_after_arrange)
             hotel_url_1 = tripadvisor_url_short + branch.find("a")["href"]
             hotel_url.append(hotel_url_1)
-        branch_page = soup_obj.find("div", {"class": "pageNumbers"})
-        next_page_url = tripadvisor_url_short + branch_page.find("a")["href"]
         try:
+            branch_page = soup_obj.find("a", attrs={"class": "nav next ui_button primary"})["href"]
+            next_page_url = tripadvisor_url_short + branch_page
+            print(next_page_url)
             soup_obj = create_soup_obj(next_page_url)
             branches = soup_obj.find_all("div", {"class": "ui_column is-8 main_col allowEllipsis"})
+            i += 1
         except:
-            print("End of pages before end of loop!")
+            print(Fore.RED + "End of pages before end of loop!")
             break
-        i += 1
-    # print(num_of_reviews)
-    # print(hotel_url)
 
 
 def create_soup_obj(url):
     try:
         response = requests.get(url, headers=user_agent)
-        print(response)
         soup_obj = BeautifulSoup(response.text, 'html.parser')
-        # print(soup_obj.prettify())
         return soup_obj
     except:
-        print("Error : couldn't create soup object!")
+        print(Fore.RED + "Error : couldn't create soup object!")
 
 
-def create_df():
+def create_dictionary_for_df():
     dictionary_for_df = {"Hotel name": hotel_names, "Hotel url": hotel_url, "Number of reviews": num_of_reviews,
                          "Tripadvisor rating": rating_tripadvisor,
                          "Rating regarding other hotels in the same city": rating_regarding_other_hotels,
@@ -180,6 +186,11 @@ def create_df():
                          "Air conditioning": boolean_air_conditioning, "Minibar": boolean_minibar,
                          "Cable satellite TV": boolean_cable_satellite_TV, "Great for walkers": great_for_walkers_rate,
                          "Number of restaurants": num_of_restaurants, "Num of attractions": num_attractions}
+    return dictionary_for_df
+
+
+def create_df(dictionary_for_df):
+    print_arrays()
     df = pd.DataFrame(dictionary_for_df)
-    print(df)
-    df.to_csv(r'data frame.csv', index=False,header=True)
+    df.to_csv(r'data frame before cleaning.csv', index=False, header=True)
+    return df
