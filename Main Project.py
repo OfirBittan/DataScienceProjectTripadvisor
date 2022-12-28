@@ -20,14 +20,14 @@ if __name__ == "__main__":
         soup = create_soup_obj(url)
         all_hotels_parse(soup, tripadvisor_url_short)
         specific_hotel_parse()
-        dictionary_for_df = create_dictionary_for_df()
-        df = create_df(dictionary_for_df)
+    dictionary_for_df = create_dictionary_for_df()
+    df = create_df(dictionary_for_df)
 
-        # CleaningFunctions
-        remove_duplicative(df)
-        remove_corrupt_rows(df, 4)
-        outlier_detection_zscore_dist(df)
-        df.to_csv(r'data frame after cleaning.csv', index=False, header=True)
+    # CleaningFunctions
+    remove_duplicative(df)
+    remove_corrupt_rows(df, 4)
+    outlier_detection_zscore_dist(df)
+    df.to_csv(r'data frame after cleaning.csv', index=False, header=True)
 
         # # VisualizationFunctions
         # sr = get_frequent_elements(df, "Tripadvisor rating", 3.0)

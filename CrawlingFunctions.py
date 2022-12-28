@@ -5,6 +5,7 @@ import pandas as pd
 from colorama import Fore
 
 user_agent = {'User-agent': 'Mozilla/5.0'}
+dictionary_for_df = {}
 
 # Parameters for - all_hotels_parse
 hotel_names = []
@@ -75,6 +76,7 @@ def find_a_number_in_string(s):
 
 def specific_hotel_parse():
     for url in hotel_url:
+        print(url)
         try:
             soup_obj = create_soup_obj(url)
         except:
@@ -130,14 +132,11 @@ def specific_hotel_parse():
 def add_to_arr(arr_name, find_code):
     if find_code is not None:
         if type(find_code) == list and len(find_code) > 0:
-            arr_name.append(float(find_code[0]))
+            arr_name.append(find_code[0])
         elif type(find_code) == list and len(find_code) == 0:
             arr_name.append("")
         else:
-            if type(find_code) == str:
-                arr_name.append(find_code)
-            else:
-                arr_name.append(float(find_code))
+            arr_name.append(find_code)
     else:
         arr_name.append("")
 
