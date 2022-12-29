@@ -7,8 +7,8 @@ def remove_duplicative(df, col_name=None):
     return df.drop_duplicates(subset=[col_name])
 
 
-def remove_corrupt_rows(df, num_max_missing_cols):
-    return df.dropna(thresh=df.shape[1] - num_max_missing_cols)
+def remove_corrupt_rows(df):
+    df.dropna(inplace=True)
 
 
 def outlier_detection_zscore_dist(df):
