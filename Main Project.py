@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 if __name__ == "__main__":
 
     print("-- Start --")
-    num_of_hotel_pages = int(input("How many lines do you want to crawl? "))
+    num_of_hotel_pages = int(input("How many pages do you want to crawl? "))
 
     tripadvisor_url_short = "https://www.tripadvisor.com"
     tripadvisor_urls = ["https://www.tripadvisor.com/Hotels-g60763-New_York_City_New_York-Hotels.html",
@@ -15,6 +15,7 @@ if __name__ == "__main__":
                         "https://www.tripadvisor.com/Hotels-g186338-London_England-Hotels.html",
                         "https://www.tripadvisor.com/Hotels-g274887-Budapest_Central_Hungary-Hotels.html",
                         "https://www.tripadvisor.com/Hotels-g28930-Florida-Hotels.html"]
+    # tripadvisor_urls = ["https://www.tripadvisor.com/Hotels-g60763-New_York_City_New_York-Hotels.html"]
 
     print("-- Crawling --")
     for url in tripadvisor_urls:

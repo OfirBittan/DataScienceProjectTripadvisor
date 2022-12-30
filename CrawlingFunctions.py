@@ -33,10 +33,24 @@ boolean_air_conditioning = []
 boolean_minibar = []
 boolean_cable_satellite_TV = []
 
+# part 4.1 - adding features
+boolean_hour_front_desk = []
+boolean_non_smoking_hotel = []
+boolean_express_check_in_check_out = []
+boolean_baggage_storage = []
+boolean_housekeeping = []
+boolean_safe = []
+boolean_family_rooms = []
+
 # part 5 - Great for walkers, Restaurants, Attractions
 great_for_walkers_rate = []
 num_of_restaurants = []
 num_attractions = []
+
+# part 6 - good and bad words from comments
+count_good_words = []
+count_bad_words = []
+count_total = []
 
 
 def create_soup_obj(url):
@@ -72,6 +86,31 @@ def all_hotels_parse(num_of_hotel_pages, soup_obj, tripadvisor_url_short):
             break
 
 
+def calculate_words_good(str_words_from_comments):
+    count_good1 = str_words_from_comments.count("good") + str_words_from_comments.count(
+        "nice") + str_words_from_comments.count("liked") + str_words_from_comments.count(
+        "perfect") + str_words_from_comments.count("delicious")
+    return str(count_good1)
+
+
+def calculate_words_bad(str_words_from_comments):
+    count_bad1 = str_words_from_comments.count("bad") + str_words_from_comments.count(
+        "terrible") + str_words_from_comments.count("disappointed") + str_words_from_comments.count(
+        "poor") + str_words_from_comments.count("rude")
+    return str(count_bad1)
+
+
+def calculate_words_good_and_bad(str_words_from_comments):
+    count_good2 = str_words_from_comments.count("good") + str_words_from_comments.count(
+        "nice") + str_words_from_comments.count("liked") + str_words_from_comments.count(
+        "perfect") + str_words_from_comments.count("delicious")
+    count_bad2 = str_words_from_comments.count("bad") + str_words_from_comments.count(
+        "terrible") + str_words_from_comments.count("disappointed") + str_words_from_comments.count(
+        "poor") + str_words_from_comments.count("rude")
+    count_total1 = count_good2 - count_bad2
+    return str(count_total1)
+
+
 def specific_hotel_parse():
     for url in hotel_url:
         try:
@@ -79,6 +118,10 @@ def specific_hotel_parse():
             print(url)
         except:
             continue
+        str_words_from_comments = str(soup_obj.findAll("div", attrs={"class": "YibKl MC R2 Gi z Z BB pBbQr"}))
+        count_good_words.append(calculate_words_good(str_words_from_comments))
+        count_bad_words.append(calculate_words_bad(str_words_from_comments))
+        count_total.append(calculate_words_good_and_bad(str_words_from_comments))
         add_to_arr_2(rating_tripadvisor, find_a_number_in_string(soup_obj.find("span", {"class": "uwJeR P"})))
         add_to_arr_2(rating_regarding_other_hotels,
                      find_a_number_in_string(soup_obj.find("span", {"class": "Ci _R S4 H3 MD"})))
@@ -100,6 +143,13 @@ def specific_hotel_parse():
         add_to_arr_1(boolean_air_conditioning, "Air conditioning", str_facilities)
         add_to_arr_1(boolean_minibar, "Minibar", str_facilities)
         add_to_arr_1(boolean_cable_satellite_TV, "Cable / satellite TV", str_facilities)
+        add_to_arr_1(boolean_hour_front_desk, "24-hour front desk", str_facilities)
+        add_to_arr_1(boolean_non_smoking_hotel, "Non-smoking hotel", str_facilities)
+        add_to_arr_1(boolean_express_check_in_check_out, "Express check-in / check-out", str_facilities)
+        add_to_arr_1(boolean_baggage_storage, "Baggage storage", str_facilities)
+        add_to_arr_1(boolean_housekeeping, "Housekeeping", str_facilities)
+        add_to_arr_1(boolean_safe, "Safe", str_facilities)
+        add_to_arr_1(boolean_family_rooms, "Family rooms", str_facilities)
         add_to_arr_2(great_for_walkers_rate,
                      find_a_number_in_string(soup_obj.find("span", attrs={"class": "iVKnd fSVJN"})))
         add_to_arr_2(num_of_restaurants,
@@ -108,11 +158,11 @@ def specific_hotel_parse():
                      find_a_number_in_string(soup_obj.find("span", {"class": "iVKnd rYxbA"})))
 
 
-def add_to_arr_1(arr_name, str_facilities, search_str):
+def add_to_arr_1(arr_name, search_str, str_facilities):
     if search_str in str_facilities:
-        arr_name.append(1)
+        arr_name.append("1")
     else:
-        arr_name.append(0)
+        arr_name.append("0")
 
 
 def add_to_arr_2(arr_name, find_code):
@@ -141,7 +191,15 @@ def create_df():
                          "Paid private parking nearby": boolean_paid_private_parking_nearby,
                          "Free high speed wifi": boolean_free_high_speed_wifi, "Fitness_center": boolean_fitness_center,
                          "Air conditioning": boolean_air_conditioning, "Minibar": boolean_minibar,
-                         "Cable satellite TV": boolean_cable_satellite_TV, "Great for walkers": great_for_walkers_rate,
+                         "Cable satellite TV": boolean_cable_satellite_TV,
+                         "24-hour front desk": boolean_hour_front_desk,
+                         "Non-smoking hotel": boolean_non_smoking_hotel,
+                         "Express check-in / check-out": boolean_express_check_in_check_out,
+                         "Baggage storage": boolean_baggage_storage, "Housekeeping": boolean_housekeeping,
+                         "Safe": boolean_safe, "Family rooms": boolean_family_rooms,
+                         "Count good words": count_good_words, "Count bad words": count_bad_words,
+                         "Count total words": count_total,
+                         "Great for walkers": great_for_walkers_rate,
                          "Number of restaurants": num_of_restaurants, "Num of attractions": num_attractions}
     return pd.DataFrame(dictionary_for_df)
 
@@ -169,6 +227,26 @@ def print_arrays():
     print(boolean_minibar)
     print("boolean_cable_satellite_TV " + str(len(boolean_cable_satellite_TV)))
     print(boolean_cable_satellite_TV)
+    print("24-hour front desk " + str(len(boolean_hour_front_desk)))
+    print(boolean_hour_front_desk)
+    print("Non-smoking hotel " + str(len(boolean_non_smoking_hotel)))
+    print(boolean_non_smoking_hotel)
+    print("Express check-in / check-out " + str(len(boolean_express_check_in_check_out)))
+    print(boolean_express_check_in_check_out)
+    print("Baggage storage " + str(len(boolean_baggage_storage)))
+    print(boolean_baggage_storage)
+    print("Housekeeping " + str(len(boolean_housekeeping)))
+    print(boolean_housekeeping)
+    print("Safe " + str(len(boolean_safe)))
+    print(boolean_safe)
+    print("Family rooms " + str(len(boolean_family_rooms)))
+    print(boolean_family_rooms)
+    print("Count good words " + str(len(count_good_words)))
+    print(count_good_words)
+    print("Count bad words " + str(len(count_bad_words)))
+    print(count_bad_words)
+    print("Count total words " + str(len(count_total)))
+    print(count_total)
     print("great_for_walkers_rate " + str(len(great_for_walkers_rate)))
     print(great_for_walkers_rate)
     print("num_of_restaurants " + str(len(num_of_restaurants)))

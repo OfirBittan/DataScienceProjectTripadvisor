@@ -14,3 +14,5 @@ def one_dim_plot(sr, plot_type, axis):
 
 def two_dim_plot(x, y):
     plt.scatter(x, y)
+    plt.xlabel("Tripadvisor rating")
+    plt.ylabel("Cleanliness rating on Tripadvisor")
