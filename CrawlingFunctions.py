@@ -68,7 +68,8 @@ def all_hotels_parse(num_of_hotel_pages, soup_obj, tripadvisor_url_short):
     while i < num_of_hotel_pages:
         for branch in branches:
             review = branch.find("a", {"class": "review_count"}).get_text()
-            num_of_reviews.append(review)
+            str_review = str(review).split(" ")[0]
+            num_of_reviews.append(str_review)
             hotel_name_1 = branch.find("a", {"target": "_blank"}).get_text()
             hotel_name_1_after_arrange = str(hotel_name_1).split(".")[-1].strip()
             hotel_names.append(hotel_name_1_after_arrange)

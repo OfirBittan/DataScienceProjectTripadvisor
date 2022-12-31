@@ -1,5 +1,12 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn import tree, metrics
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
+import matplotlib.pyplot as plt
+
+import numpy as np
 
 
 def load_dataset(file_name):
@@ -8,11 +15,11 @@ def load_dataset(file_name):
 
 def transfer_str_to_numeric_vals(dataset):
     dt = dataset.copy()
-    dt = dt.dropna(axis='index', how='any')
-    dt.drop_duplicates(keep='first', inplace=True)
+    dt = dt.dropna(axis="index", how="any")
+    dt.drop_duplicates(keep="first", inplace=True)
     for col in dt.columns:
-        lables = dt[col].astype('category').cat.categories.tolist()
-        replace__map_comp = {col: {k: v for k, v in zip(lables, list(range(0, len(lables) + 1)))}}
+        value = dt[col].astype("category").cat.categories.tolist()
+        replace__map_comp = {col: {k: v for k, v in zip(value, list(range(0, len(value) + 1)))}}
         dt.replace(replace__map_comp, inplace=True)
     return dt
 
@@ -27,3 +34,50 @@ def split_to_train_and_test(dataset, label_column, test_ratio, rand_state):
         i += 1
     X_train, X_test, y_train, y_test = train_test_split(dataset, y, test_size=test_ratio, random_state=rand_state)
     return X_train, X_test, y_train, y_test
+
+
+def get_data_ready(file_name):
+    raw_dataset = load_dataset(file_name)
+    raw_dataset.drop(columns=["Hotel name", "Hotel url"], inplace=True)
+    dataset = transfer_str_to_numeric_vals(raw_dataset)
+    dataset.to_csv(r"dataFrameAfterChangeToNumeric.csv", index=False, header=True)
+    return dataset
+
+
+def check_eda_method(X_train, X_test, y_train, y_test):
+    clf1 = tree.DecisionTreeClassifier()
+    clf2 = RandomForestClassifier()
+    clf3 = GaussianNB()
+    clf4 = KNeighborsClassifier()
+    colors_arr = ["b", "g", "r", "c", "m", "y", "k", "purple"]
+    idx_colors = 0
+    alg_names = ["decision_tree", "random_forest", "naive_bayes", "knn"]
+    for idx, clf in enumerate([clf1, clf2, clf3, clf4]):
+        clf.fit(X_train, y_train)
+        y_pred = clf.predict(X_test)
+        y_pred_train = clf.predict(X_train)
+        print(alg_names[idx])
+        print(f"accurate on train is {metrics.accuracy_score(y_true=y_train, y_pred=y_pred_train)}")
+        print(f"accurate on test is {metrics.accuracy_score(y_true=y_test, y_pred=y_pred)}")
+        print("Confusion matrix is:")
+        print(metrics.confusion_matrix(y_test, y_pred))
+        eda_result_visualization(y_test.values.tolist(), y_pred, alg_names[idx], colors_arr[idx_colors], colors_arr[idx_colors + 1])
+        idx_colors += 2
+        print("------------------------------------------------------------------")
+
+
+def eda_result_visualization(y_test_origin, y_test_predict, alg_name, color1, color2):
+    width = 0.20
+    y_test_origin_len = len(y_test_origin)
+    y_test_predict_len = len(y_test_predict)
+    jump = int(y_test_origin_len / 14)
+    bar1 = plt.bar(np.arange(len(y_test_origin[0:y_test_origin_len:jump])), y_test_origin[0:y_test_origin_len:jump],
+                   width, color=color1)
+    bar2 = plt.bar(np.arange(len(y_test_predict[0:y_test_predict_len:jump])) + width,
+                   y_test_predict[0:y_test_predict_len:jump], width, color=color2)
+    plt.legend((bar1, bar2), ("Original", "Prediction test"))
+    plt.title("Tripadvisor rating EDA " + alg_name)
+    plt.xlabel("Hotel examples")
+    plt.ylabel("Tripadvisor rating")
+    plt.savefig("EDA results graph " + alg_name + ".png")
+    plt.close()
