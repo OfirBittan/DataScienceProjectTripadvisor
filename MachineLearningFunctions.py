@@ -8,9 +8,30 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 
+"""
+Students Names : Ofir Bittan and Gali Seregin.
+Function Name : load_dataset.
+Describe function : 
+    This function creates and returns data set csv file with a given string - file name.
+Origin of code : 
+    From our home assignments.
+"""
+
 
 def load_dataset(file_name):
     return pd.read_csv(file_name)
+
+
+"""
+Students Names : Ofir Bittan and Gali Seregin.
+Function Name : transfer_str_to_numeric_vals.
+Describe function : 
+    * Remove any rows with one or more missing value. 
+    * For any duplicate rows, keep only the first one. 
+    * Transfer dataset's values to numeric ones.
+Origin of code : 
+    From our home assignments.
+"""
 
 
 def transfer_str_to_numeric_vals(dataset):
@@ -22,6 +43,18 @@ def transfer_str_to_numeric_vals(dataset):
         replace__map_comp = {col: {k: v for k, v in zip(value, list(range(0, len(value) + 1)))}}
         dt.replace(replace__map_comp, inplace=True)
     return dt
+
+
+"""
+Students Names : Ofir Bittan and Gali Seregin.
+Function Name : split_to_train_and_test.
+Describe function : 
+    * Split the given dataset into 'X' (feature vectors - dataframe) and 'y' (corresponding labels - series), 
+    determined by the given 'label_column' column.
+    * Split X and y into 'X_train', 'X_test', and corresponding 'y_train' and 'y_test' series.
+Origin of code : 
+    From our home assignments.
+"""
 
 
 def split_to_train_and_test(dataset, label_column, test_ratio, rand_state):
@@ -36,12 +69,34 @@ def split_to_train_and_test(dataset, label_column, test_ratio, rand_state):
     return X_train, X_test, y_train, y_test
 
 
+"""
+Students Names : Ofir Bittan and Gali Seregin.
+Function Name : get_data_ready.
+Describe function : 
+    This function drops columns that has we don't wand to appear in the next stage,
+     and calls transfer_str_to_numeric_vals. 
+     It returns data frame from csv file name given.
+Origin of code : 
+    We wrote this code for the project.
+"""
+
+
 def get_data_ready(file_name):
     raw_dataset = load_dataset(file_name)
     raw_dataset.drop(columns=["Hotel name", "Hotel url"], inplace=True)
     dataset = transfer_str_to_numeric_vals(raw_dataset)
     dataset.to_csv(r"dataFrameAfterChangeToNumeric.csv", index=False, header=True)
     return dataset
+
+
+"""
+Students Names : Ofir Bittan and Gali Seregin.
+Function Name : check_eda_method.
+Describe function : 
+    This function checks 4 eda methods and calls another function that visualize the results.
+Origin of code : 
+    From our own course lecture, and we wrote this code for the project.
+"""
 
 
 def check_eda_method(X_train, X_test, y_train, y_test):
@@ -61,9 +116,20 @@ def check_eda_method(X_train, X_test, y_train, y_test):
         print(f"accurate on test is {metrics.accuracy_score(y_true=y_test, y_pred=y_pred)}")
         print("Confusion matrix is:")
         print(metrics.confusion_matrix(y_test, y_pred))
-        eda_result_visualization(y_test.values.tolist(), y_pred, alg_names[idx], colors_arr[idx_colors], colors_arr[idx_colors + 1])
+        eda_result_visualization(y_test.values.tolist(), y_pred, alg_names[idx], colors_arr[idx_colors],
+                                 colors_arr[idx_colors + 1])
         idx_colors += 2
         print("------------------------------------------------------------------")
+
+
+"""
+Students Names : Ofir Bittan and Gali Seregin.
+Function Name : eda_result_visualization.
+Describe function : 
+    This function gets results from check_eda_method visualize the results and print it to png file.
+Origin of code : 
+    We wrote this code for the project.
+"""
 
 
 def eda_result_visualization(y_test_origin, y_test_predict, alg_name, color1, color2):

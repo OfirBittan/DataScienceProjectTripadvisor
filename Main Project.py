@@ -2,8 +2,16 @@ from CrawlingFunctions import create_soup_obj, all_hotels_parse, specific_hotel_
 from CleaningFunctions import remove_duplicative, remove_corrupt_rows, outlier_detection_zscore_dist
 from VisualizationFunctions import one_dim_plot, get_frequent_elements, two_dim_plot
 import matplotlib.pyplot as plt
-from MachineLearningFunctions import split_to_train_and_test, get_data_ready, check_eda_method, eda_result_visualization
-
+from MachineLearningFunctions import split_to_train_and_test, get_data_ready, check_eda_method
+"""
+Students Names : Ofir Bittan and Gali Seregin.
+Function Name : __main__.
+Describe function : 
+    This function is the main function of the project.
+    It calls all the functions needed by the order of the assignment given.
+Origin of code : 
+    We wrote this code for the project.
+"""
 if __name__ == "__main__":
     print("-- Start --")
     num_of_hotel_pages = int(input("How many pages do you want to crawl? "))
