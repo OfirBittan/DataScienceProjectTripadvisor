@@ -41,13 +41,8 @@ if __name__ == "__main__":
     df = get_data_ready("dataFrameBeforeCleaning.csv")
     remove_duplicative(df)
     remove_corrupt_rows(df)
-    df.to_csv(r'dataFrameAfterCleaningEmptyRows.csv', index=False, header=True)
     df = outlier_detection_iqr(df)
-    remove_corrupt_rows(df)
-    df.to_csv(r'dataFrameAfter_outlier_detection_iqr.csv', index=False, header=True)
-    # df = outlier_detection_zscore_dist(df)
-    # df.to_csv(r'dataFrameAfterCleaningZScore.csv', index=False, header=True)
-    # df.to_csv(r'dataFrameAftertransfer_str_to_numeric_vals.csv', index=False, header=True)
+    df.to_csv(r'dataFrameAfterCleaning.csv', index=False, header=True)
 
     print("-- Visualization --")
     sr = get_frequent_elements(df, "Tripadvisor rating")
@@ -61,10 +56,8 @@ if __name__ == "__main__":
     plt.close()
 
     print("-- Machine Learning --")
-    dataset = df.copy()
-    dataset = transfer_str_to_numeric_vals(dataset)
-    dataset.to_csv(r'final.csv', index=False, header=True)
+    df = transfer_str_to_numeric_vals(df)
     test_ratio, rand_state = 0.2, 42
-    X_train, X_test, y_train, y_test = split_to_train_and_test(dataset, "Tripadvisor rating", test_ratio, rand_state)
+    X_train, X_test, y_train, y_test = split_to_train_and_test(df, "Tripadvisor rating", test_ratio, rand_state)
     check_eda_method(X_train, X_test, y_train, y_test)
     print("--The End--")

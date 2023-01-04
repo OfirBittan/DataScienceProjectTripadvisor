@@ -41,7 +41,7 @@ def transfer_str_to_numeric_vals(dataset):
     dt.drop_duplicates(keep="first", inplace=True)
     for col in dt.columns:
         value = dt[col].astype("category").cat.categories.tolist()
-        replace__map_comp = {col: {k: v for k, v in zip(value, list(range(0, len(value) + 1)))}}
+        replace__map_comp = {col: {k: v for k, v in zip(value, list(range(0, len(value) + 3)))}}
         dt.replace(replace__map_comp, inplace=True)
     return dt
 
@@ -84,9 +84,8 @@ Origin of code :
 
 def get_data_ready(file_name):
     raw_dataset = load_dataset(file_name)
-    raw_dataset.drop(
-        columns=["Hotel name", "Hotel url", "Rating regarding other hotels in the same city"],
-        inplace=True)
+    raw_dataset.drop(columns=["Hotel name", "Hotel url", "Rating regarding other hotels in the same city"],
+                     inplace=True)
     return raw_dataset
 
 
@@ -105,13 +104,12 @@ def check_eda_method(X_train, X_test, y_train, y_test):
     clf2 = RandomForestClassifier()
     clf3 = GaussianNB()
     clf4 = KNeighborsClassifier()
-    clf5 = DecisionTreeClassifier()
-    clf6 = SVC()
-    colors_arr = ["b", "g", "r", "c", "m", "y", "k"]
+    clf5 = SVC()
+    colors_arr = ["b", "g", "r", "c", "m", "y", "k", "orange", "purple", "brown"]
     idx_colors = 0
-    alg_names = ["decision_tree", "random_forest", "naive_bayes", "knn", "decision_tree", "SVC"]
+    alg_names = ["Decision tree", "Random forest", "Naive bayes", "KNN", "SVC"]
     alg_number = len(alg_names)
-    for idx, clf in enumerate([clf1, clf2, clf3, clf4, clf5, clf6]):
+    for idx, clf in enumerate([clf1, clf2, clf3, clf4, clf5]):
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
         y_pred_train = clf.predict(X_train)
