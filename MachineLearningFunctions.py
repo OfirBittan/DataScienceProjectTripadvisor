@@ -1,11 +1,12 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn import tree, metrics
+from sklearn import metrics
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
 import matplotlib.pyplot as plt
-
+from sklearn.svm import SVC
 import numpy as np
 
 """
@@ -83,10 +84,10 @@ Origin of code :
 
 def get_data_ready(file_name):
     raw_dataset = load_dataset(file_name)
-    raw_dataset.drop(columns=["Hotel name", "Hotel url"], inplace=True)
-    dataset = transfer_str_to_numeric_vals(raw_dataset)
-    dataset.to_csv(r"dataFrameAfterChangeToNumeric.csv", index=False, header=True)
-    return dataset
+    raw_dataset.drop(
+        columns=["Hotel name", "Hotel url", "Rating regarding other hotels in the same city"],
+        inplace=True)
+    return raw_dataset
 
 
 """
@@ -100,14 +101,17 @@ Origin of code :
 
 
 def check_eda_method(X_train, X_test, y_train, y_test):
-    clf1 = tree.DecisionTreeClassifier()
+    clf1 = DecisionTreeClassifier()
     clf2 = RandomForestClassifier()
     clf3 = GaussianNB()
     clf4 = KNeighborsClassifier()
-    colors_arr = ["b", "g", "r", "c", "m", "y", "k", "purple"]
+    clf5 = DecisionTreeClassifier()
+    clf6 = SVC()
+    colors_arr = ["b", "g", "r", "c", "m", "y", "k"]
     idx_colors = 0
-    alg_names = ["decision_tree", "random_forest", "naive_bayes", "knn"]
-    for idx, clf in enumerate([clf1, clf2, clf3, clf4]):
+    alg_names = ["decision_tree", "random_forest", "naive_bayes", "knn", "decision_tree", "SVC"]
+    alg_number = len(alg_names)
+    for idx, clf in enumerate([clf1, clf2, clf3, clf4, clf5, clf6]):
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
         y_pred_train = clf.predict(X_train)
@@ -117,8 +121,8 @@ def check_eda_method(X_train, X_test, y_train, y_test):
         print("Confusion matrix is:")
         print(metrics.confusion_matrix(y_test, y_pred))
         eda_result_visualization(y_test.values.tolist(), y_pred, alg_names[idx], colors_arr[idx_colors],
-                                 colors_arr[idx_colors + 1])
-        idx_colors += 2
+                                 colors_arr[(idx_colors + 1)])
+        idx_colors = (idx_colors + 2) % alg_number
         print("------------------------------------------------------------------")
 
 

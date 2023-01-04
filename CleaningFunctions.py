@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.stats as stats
 
 """
 Students Names : Ofir Bittan and Gali Seregin.
@@ -27,7 +28,7 @@ Origin of code :
 
 
 def remove_corrupt_rows(df):
-    df.dropna(inplace=True)
+    df.dropna(axis=0, inplace=True)
 
 
 """
@@ -41,10 +42,26 @@ Origin of code :
 
 
 def outlier_detection_zscore_dist(df):
+    # df_copy = df.copy()
+    df = df.select_dtypes(include='number').apply(stats.zscore)
+    print(df.head())
+    return df
+    #
+    # numeric_num_cols = df_copy._get_numeric_data().columns
+    # print(numeric_num_cols)
+    # for col in numeric_num_cols:
+    #     z_score = (df[col] - df[col].mean()) / df[col].std()
+    #     print(z_score)
+    #     df_copy.loc[abs(z_score) > 3, [col]] = np.nan
+    # return df_copy
+
+
+def outlier_detection_iqr(df):
     df_copy = df.copy()
-    numeric_num_cols = df_copy._get_numeric_data().columns
-    for col in numeric_num_cols:
+    for col in df_copy:
         if df_copy[col].dtypes != object:
-            z_score = (df[col] - df[col].mean()) / df[col].std()
-            df_copy.loc[abs(z_score) > 3, [col]] = np.nan
+            Q1 = np.percentile(df_copy[col], 25)
+            Q3 = np.percentile(df_copy[col], 75)
+            IQR = Q3 - Q1
+            df_copy.loc[(df_copy[col] < Q1 - 1.5*IQR) | (df_copy[col] > Q3 + 1.5*IQR), [col]] = np.nan
     return df_copy
