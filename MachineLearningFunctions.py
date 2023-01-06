@@ -6,7 +6,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
 import matplotlib.pyplot as plt
-from sklearn.svm import SVC
 import numpy as np
 
 """
@@ -105,20 +104,15 @@ def check_eda_method(X_train, X_test, y_train, y_test):
     clf2 = RandomForestClassifier()
     clf3 = GaussianNB()
     clf4 = KNeighborsClassifier()
-    clf5 = DecisionTreeClassifier()
     colors_arr = ["b", "g", "r", "c", "m", "y", "k"]
     idx_colors = 0
-    alg_names = ["decision_tree", "random_forest", "naive_bayes", "knn", "decision_tree"]
+    alg_names = ["Decision tree", "Random forest", "Naive bayes", "KNN"]
     alg_number = len(alg_names)
-    for idx, clf in enumerate([clf1, clf2, clf3, clf4, clf5]):
+    for idx, clf in enumerate([clf1, clf2, clf3, clf4]):
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
-        y_pred_train = clf.predict(X_train)
         print(alg_names[idx])
-        print(f"accurate on train is {metrics.accuracy_score(y_true=y_train, y_pred=y_pred_train)}")
-        print(f"accurate on test is {metrics.accuracy_score(y_true=y_test, y_pred=y_pred)}")
-        print("Confusion matrix is:")
-        print(metrics.confusion_matrix(y_test, y_pred))
+        print(f"Accurate on test is {metrics.accuracy_score(y_true=y_test, y_pred=y_pred)}")
         eda_result_visualization(y_test.values.tolist(), y_pred, alg_names[idx], colors_arr[idx_colors],
                                  colors_arr[(idx_colors + 1)])
         idx_colors = (idx_colors + 2) % alg_number

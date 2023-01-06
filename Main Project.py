@@ -15,27 +15,27 @@ Origin of code :
     We wrote this code for the project.
 """
 if __name__ == "__main__":
-    # print("-- Start --")
-    # num_of_hotel_pages = int(input("How many pages do you want to crawl? "))
-    #
-    # tripadvisor_url_short = "https://www.tripadvisor.com"
-    # tripadvisor_urls = ["https://www.tripadvisor.com/Hotels-g60763-New_York_City_New_York-Hotels.html",
-    #                     "https://www.tripadvisor.com/Hotels-g187147-Paris_Ile_de_France-Hotels.html",
-    #                     "https://www.tripadvisor.com/Hotels-g274707-Prague_Bohemia-Hotels.html",
-    #                     "https://www.tripadvisor.com/Hotels-g186338-London_England-Hotels.html",
-    #                     "https://www.tripadvisor.com/Hotels-g274887-Budapest_Central_Hungary-Hotels.html",
-    #                     "https://www.tripadvisor.com/Hotels-g28930-Florida-Hotels.html",
-    #                     "https://www.tripadvisor.com/Hotels-g188045-Switzerland-Hotels.html",
-    #                     "https://www.tripadvisor.com/Hotels-g187275-Germany-Hotels.html",
-    #                     "https://www.tripadvisor.com/Hotels-g255060-Sydney_New_South_Wales-Hotels.html"]
-    #
-    # print("-- Crawling --")
-    # for url in tripadvisor_urls:
-    #     soup = create_soup_obj(url)
-    #     all_hotels_parse(num_of_hotel_pages, soup, tripadvisor_url_short)
-    # specific_hotel_parse()
-    # df = create_df()
-    # df.to_csv(r'dataFrameBeforeCleaning.csv', index=False, header=True)
+    print("-- Start --")
+    num_of_hotel_pages = int(input("How many pages do you want to crawl? "))
+
+    tripadvisor_url_short = "https://www.tripadvisor.com"
+    tripadvisor_urls = ["https://www.tripadvisor.com/Hotels-g60763-New_York_City_New_York-Hotels.html",
+                        "https://www.tripadvisor.com/Hotels-g187147-Paris_Ile_de_France-Hotels.html",
+                        "https://www.tripadvisor.com/Hotels-g274707-Prague_Bohemia-Hotels.html",
+                        "https://www.tripadvisor.com/Hotels-g186338-London_England-Hotels.html",
+                        "https://www.tripadvisor.com/Hotels-g274887-Budapest_Central_Hungary-Hotels.html",
+                        "https://www.tripadvisor.com/Hotels-g28930-Florida-Hotels.html",
+                        "https://www.tripadvisor.com/Hotels-g188045-Switzerland-Hotels.html",
+                        "https://www.tripadvisor.com/Hotels-g187275-Germany-Hotels.html",
+                        "https://www.tripadvisor.com/Hotels-g255060-Sydney_New_South_Wales-Hotels.html"]
+
+    print("-- Crawling --")
+    for url in tripadvisor_urls:
+        soup = create_soup_obj(url)
+        all_hotels_parse(num_of_hotel_pages, soup, tripadvisor_url_short)
+    specific_hotel_parse()
+    df = create_df()
+    df.to_csv(r'dataFrameBeforeCleaning.csv', index=False, header=True)
 
     print("-- Cleaning --")
     df = get_data_ready("dataFrameBeforeCleaning.csv")
