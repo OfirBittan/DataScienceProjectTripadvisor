@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from MachineLearningFunctions import split_to_train_and_test, get_data_ready, check_eda_method, \
     transfer_str_to_numeric_vals
 
+
 """
 Students Names : Ofir Bittan and Gali Seregin.
 Function Name : __main__.
