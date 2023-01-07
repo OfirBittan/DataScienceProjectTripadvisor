@@ -121,7 +121,7 @@ def check_eda_method(X_train, X_test, y_train, y_test):
 
 """
 Students Names : Ofir Bittan and Gali Seregin.
-Function Name : eda_result_visualization..
+Function Name : eda_result_visualization.
 Describe function : 
     This function gets results from check_eda_method visualize the results and print it to png file.
 Origin of code : 

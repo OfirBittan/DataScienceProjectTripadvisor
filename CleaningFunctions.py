@@ -22,7 +22,7 @@ Function Name : remove_corrupt_rows.
 Describe function : 
     This function removes lines from dataframe that has at least one missing parameter.
 Origin of code : 
-    From our home assignments..
+    From our home assignments.
 """
 
 
