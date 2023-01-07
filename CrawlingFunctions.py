@@ -291,7 +291,7 @@ def add_to_arr_2(arr_name, find_code):
 Students Names : Ofir Bittan and Gali Seregin.
 Function Name : find_a_number_in_string.
 Describe function : 
-    This function gets a string and extracts floating numbers from it.
+    This function gets a string and extracts floating numbers from it..
     It returns an array of the number it found.
 Origin of code : 
     Web url = "https://stackoverflow.com/questions/4703390/how-to-extract-a-floating-number-from-a-string"

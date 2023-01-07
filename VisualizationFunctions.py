@@ -23,7 +23,7 @@ Function Name : one_dim_plot.
 Describe function : 
     This function gets a series, plot type and axis 0/1 and creates a plot.
 Origin of code : 
-    From our home assignments.
+    From our home assignments..
 """
 
 
