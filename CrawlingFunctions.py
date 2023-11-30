@@ -1,9 +1,9 @@
-import requests
 from bs4 import BeautifulSoup
 import re
 import pandas as pd
 from colorama import Fore
 import numpy as np
+from security import safe_requests
 
 """
 Students Names : Ofir Bittan and Gali Seregin
@@ -54,7 +54,7 @@ Origin of code :
 
 def create_soup_obj(url):
     try:
-        response = requests.get(url, headers=user_agent)
+        response = safe_requests.get(url, headers=user_agent)
         soup_obj = BeautifulSoup(response.text, 'html.parser')
         return soup_obj
     except:
