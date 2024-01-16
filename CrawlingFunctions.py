@@ -54,7 +54,7 @@ Origin of code :
 
 def create_soup_obj(url):
     try:
-        response = requests.get(url, headers=user_agent)
+        response = requests.get(url, headers=user_agent, timeout=60)
         soup_obj = BeautifulSoup(response.text, 'html.parser')
         return soup_obj
     except:
